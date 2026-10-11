@@ -1,0 +1,1155 @@
+{
+  "meta": {
+    "app": "CODA",
+    "purpose": "Temporary mock data for frontend development",
+    "version": "1.0.0",
+    "generatedAt": "2026-10-11",
+    "note": "Fictional normalized seed data for UI and feature development. Relationships are internally consistent and the structure is designed for later migration to PostgreSQL/Prisma."
+  },
+  "clinic": {
+    "id": "clinic_001",
+    "name": "North Clinic",
+    "legalName": "North Veterinary Care LLC",
+    "branch": "North Clinic, Tower A",
+    "address": {
+      "line1": "450 Veterinary Way, Tower A",
+      "city": "Philadelphia",
+      "state": "PA",
+      "postalCode": "19103",
+      "country": "United States"
+    },
+    "phone": "+1 (215) 555-0148",
+    "email": "contact@northclinic.example",
+    "timezone": "America/New_York",
+    "currency": "USD",
+    "status": "active",
+    "plan": "pro"
+  },
+  "users": [
+    {
+      "id": "user_001",
+      "clinicId": "clinic_001",
+      "role": "CHIEF_VET",
+      "firstName": "Julian",
+      "lastName": "Miller",
+      "displayName": "Dr. Julian Miller",
+      "title": "Chief Vet",
+      "email": "julian.miller@example.com",
+      "phone": "+1 (215) 555-0101",
+      "licenseNumber": "VET-PA-10482",
+      "specialty": "General Practice",
+      "status": "active",
+      "avatar": "/avatars/julian-miller.jpg"
+    },
+    {
+      "id": "user_002",
+      "clinicId": "clinic_001",
+      "role": "VETERINARIAN",
+      "firstName": "Sarah",
+      "lastName": "Jenkins",
+      "displayName": "Dr. Sarah Jenkins",
+      "title": "Senior Veterinarian",
+      "email": "sarah.jenkins@example.com",
+      "phone": "+1 (215) 555-0102",
+      "licenseNumber": "VET-PA-89332",
+      "specialty": "Surgery",
+      "status": "active",
+      "avatar": "/avatars/sarah-jenkins.jpg"
+    },
+    {
+      "id": "user_003",
+      "clinicId": "clinic_001",
+      "role": "VETERINARIAN",
+      "firstName": "Julian",
+      "lastName": "Vance",
+      "displayName": "Dr. Julian Vance",
+      "title": "Veterinarian",
+      "email": "julian.vance@example.com",
+      "phone": "+1 (215) 555-0103",
+      "licenseNumber": "VET-PA-78124",
+      "specialty": "Internal Medicine",
+      "status": "active",
+      "avatar": "/avatars/julian-vance.jpg"
+    },
+    {
+      "id": "user_004",
+      "clinicId": "clinic_001",
+      "role": "VETERINARY_TECHNICIAN",
+      "firstName": "Emily",
+      "lastName": "Brooks",
+      "displayName": "Emily Brooks",
+      "title": "Veterinary Technician",
+      "email": "emily.brooks@example.com",
+      "phone": "+1 (215) 555-0104",
+      "licenseNumber": null,
+      "specialty": null,
+      "status": "active",
+      "avatar": "/avatars/emily-brooks.jpg"
+    }
+  ],
+  "owners": [
+    {
+      "id": "owner_001",
+      "firstName": "Emily",
+      "lastName": "Watson",
+      "displayName": "Emily Watson",
+      "email": "emily.watson@example.com",
+      "phone": "+1 (215) 555-0201",
+      "address": {
+        "city": "Philadelphia",
+        "state": "PA",
+        "postalCode": "19104",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "sms"
+    },
+    {
+      "id": "owner_002",
+      "firstName": "David",
+      "lastName": "Chen",
+      "displayName": "David Chen",
+      "email": "david.chen@example.com",
+      "phone": "+1 (215) 555-0202",
+      "address": {
+        "city": "Philadelphia",
+        "state": "PA",
+        "postalCode": "19106",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "email"
+    },
+    {
+      "id": "owner_003",
+      "firstName": "Mark",
+      "lastName": "Richards",
+      "displayName": "Mark Richards",
+      "email": "mark.richards@example.com",
+      "phone": "+1 (570) 555-0203",
+      "address": {
+        "city": "Scranton",
+        "state": "PA",
+        "postalCode": "18503",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "sms"
+    },
+    {
+      "id": "owner_004",
+      "firstName": "Eleanor",
+      "lastName": "Vance",
+      "displayName": "Eleanor Vance",
+      "email": "eleanor.vance@example.com",
+      "phone": "+1 (303) 555-0204",
+      "address": {
+        "city": "Boulder",
+        "state": "CO",
+        "postalCode": "80302",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "email"
+    },
+    {
+      "id": "owner_005",
+      "firstName": "Michael",
+      "lastName": "Scott",
+      "displayName": "Michael Scott",
+      "email": "michael.scott@example.com",
+      "phone": "+1 (570) 555-0205",
+      "address": {
+        "city": "Scranton",
+        "state": "PA",
+        "postalCode": "18505",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": false,
+      "preferredContactMethod": "phone"
+    },
+    {
+      "id": "owner_006",
+      "firstName": "Jim",
+      "lastName": "Halpert",
+      "displayName": "Jim Halpert",
+      "email": "jim.halpert@example.com",
+      "phone": "+1 (215) 555-0206",
+      "address": {
+        "city": "Philadelphia",
+        "state": "PA",
+        "postalCode": "19107",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "email"
+    },
+    {
+      "id": "owner_007",
+      "firstName": "Sarah",
+      "lastName": "Jenkins",
+      "displayName": "Sarah Jenkins",
+      "email": "sarah.jenkins.owner@example.com",
+      "phone": "+1 (720) 555-0207",
+      "address": {
+        "city": "Boulder",
+        "state": "CO",
+        "postalCode": "80301",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "email"
+    },
+    {
+      "id": "owner_008",
+      "firstName": "Robert",
+      "lastName": "Fox",
+      "displayName": "Robert Fox",
+      "email": "robert.fox@example.com",
+      "phone": "+1 (215) 555-0208",
+      "address": {
+        "city": "Philadelphia",
+        "state": "PA",
+        "postalCode": "19103",
+        "country": "United States"
+      },
+      "status": "active",
+      "portalAccess": true,
+      "preferredContactMethod": "sms"
+    }
+  ],
+  "patients": [
+    {
+      "id": "pet_001",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_001",
+      "name": "Cooper",
+      "species": "dog",
+      "breed": "Golden Retriever",
+      "sex": "male",
+      "neutered": true,
+      "dateOfBirth": "2019-04-18",
+      "ageYears": 7,
+      "weightKg": 31.4,
+      "color": "Golden",
+      "microchipNumber": "985141000123456",
+      "residence": "Scranton, PA",
+      "status": "active",
+      "lastVisit": "2026-10-09",
+      "nextAppointment": "2026-10-12T10:30:00-04:00",
+      "avatar": "/pets/cooper.jpg",
+      "allergies": [
+        "Chicken"
+      ],
+      "conditions": [
+        "Seasonal allergies"
+      ],
+      "notes": "Friendly, anxious around needles.",
+      "vaccinations": [
+        {
+          "name": "Rabies",
+          "date": "2026-02-12",
+          "nextDue": "2027-02-12",
+          "status": "up_to_date"
+        },
+        {
+          "name": "DHPP",
+          "date": "2026-02-12",
+          "nextDue": "2027-02-12",
+          "status": "up_to_date"
+        },
+        {
+          "name": "Bordetella",
+          "date": "2026-08-10",
+          "nextDue": "2027-08-10",
+          "status": "up_to_date"
+        }
+      ]
+    },
+    {
+      "id": "pet_002",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_002",
+      "name": "Luna",
+      "species": "cat",
+      "breed": "Persian Cat",
+      "sex": "female",
+      "neutered": true,
+      "dateOfBirth": "2024-01-22",
+      "ageYears": 2,
+      "weightKg": 4.8,
+      "color": "White and gray",
+      "microchipNumber": "985141000234567",
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-10-05",
+      "nextAppointment": "2026-10-12T11:15:00-04:00",
+      "avatar": "/pets/luna.jpg",
+      "allergies": [],
+      "conditions": [],
+      "notes": "Indoor cat.",
+      "vaccinations": [
+        {
+          "name": "Rabies",
+          "date": "2026-03-03",
+          "nextDue": "2027-03-03",
+          "status": "up_to_date"
+        },
+        {
+          "name": "FVRCP",
+          "date": "2026-03-03",
+          "nextDue": "2027-03-03",
+          "status": "up_to_date"
+        }
+      ]
+    },
+    {
+      "id": "pet_003",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_006",
+      "name": "Bailey",
+      "species": "dog",
+      "breed": "Golden Retriever",
+      "sex": "female",
+      "neutered": true,
+      "dateOfBirth": "2021-06-09",
+      "ageYears": 5,
+      "weightKg": 28.2,
+      "color": "Golden",
+      "microchipNumber": "985141000345678",
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-10-01",
+      "nextAppointment": "2026-10-12T11:45:00-04:00",
+      "avatar": "/pets/bailey.jpg",
+      "allergies": [],
+      "conditions": [
+        "Mild hip dysplasia"
+      ],
+      "notes": "Responds well to treats.",
+      "vaccinations": [
+        {
+          "name": "Rabies",
+          "date": "2026-01-20",
+          "nextDue": "2027-01-20",
+          "status": "up_to_date"
+        },
+        {
+          "name": "DHPP",
+          "date": "2026-01-20",
+          "nextDue": "2027-01-20",
+          "status": "up_to_date"
+        }
+      ]
+    },
+    {
+      "id": "pet_004",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_007",
+      "name": "Oliver",
+      "species": "rabbit",
+      "breed": "Holland Lop",
+      "sex": "male",
+      "neutered": true,
+      "dateOfBirth": "2020-08-14",
+      "ageYears": 6,
+      "weightKg": 1.9,
+      "color": "Brown and white",
+      "microchipNumber": null,
+      "residence": "Boulder, CO",
+      "status": "active",
+      "lastVisit": "2026-09-28",
+      "nextAppointment": "2026-10-12T13:30:00-04:00",
+      "avatar": "/pets/oliver.jpg",
+      "allergies": [],
+      "conditions": [
+        "Dental overgrowth"
+      ],
+      "notes": "Requires regular dental checks.",
+      "vaccinations": []
+    },
+    {
+      "id": "pet_005",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_001",
+      "name": "Max",
+      "species": "cat",
+      "breed": "Domestic Shorthair",
+      "sex": "male",
+      "neutered": true,
+      "dateOfBirth": "2022-11-02",
+      "ageYears": 3,
+      "weightKg": 5.7,
+      "color": "Gray tabby",
+      "microchipNumber": "985141000456789",
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-10-10",
+      "nextAppointment": null,
+      "avatar": "/pets/max.jpg",
+      "allergies": [],
+      "conditions": [
+        "Mildly elevated creatinine"
+      ],
+      "notes": "Monitor renal values.",
+      "vaccinations": [
+        {
+          "name": "Rabies",
+          "date": "2026-05-16",
+          "nextDue": "2027-05-16",
+          "status": "up_to_date"
+        }
+      ]
+    },
+    {
+      "id": "pet_006",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_003",
+      "name": "Buddy",
+      "species": "dog",
+      "breed": "Labrador Retriever",
+      "sex": "male",
+      "neutered": true,
+      "dateOfBirth": "2018-03-11",
+      "ageYears": 8,
+      "weightKg": 34.1,
+      "color": "Black",
+      "microchipNumber": "985141000567890",
+      "residence": "Scranton, PA",
+      "status": "active",
+      "lastVisit": "2026-10-11",
+      "nextAppointment": null,
+      "avatar": "/pets/buddy.jpg",
+      "allergies": [],
+      "conditions": [],
+      "notes": "Owner reports mild lethargy after vaccination.",
+      "vaccinations": [
+        {
+          "name": "Rabies",
+          "date": "2026-10-10",
+          "nextDue": "2027-10-10",
+          "status": "up_to_date"
+        }
+      ]
+    },
+    {
+      "id": "pet_007",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_008",
+      "name": "Milo",
+      "species": "dog",
+      "breed": "Beagle",
+      "sex": "male",
+      "neutered": true,
+      "dateOfBirth": "2020-05-27",
+      "ageYears": 6,
+      "weightKg": 13.6,
+      "color": "Tri-color",
+      "microchipNumber": "985141000678901",
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-09-21",
+      "nextAppointment": "2026-10-14T09:00:00-04:00",
+      "avatar": "/pets/milo.jpg",
+      "allergies": [],
+      "conditions": [
+        "Otitis externa"
+      ],
+      "notes": "Follow-up recommended.",
+      "vaccinations": []
+    },
+    {
+      "id": "pet_008",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_004",
+      "name": "Cleo",
+      "species": "cat",
+      "breed": "Siamese",
+      "sex": "female",
+      "neutered": true,
+      "dateOfBirth": "2023-07-19",
+      "ageYears": 3,
+      "weightKg": 4.2,
+      "color": "Seal point",
+      "microchipNumber": "985141000789012",
+      "residence": "Boulder, CO",
+      "status": "active",
+      "lastVisit": "2026-09-18",
+      "nextAppointment": null,
+      "avatar": "/pets/cleo.jpg",
+      "allergies": [],
+      "conditions": [],
+      "notes": "Healthy.",
+      "vaccinations": []
+    },
+    {
+      "id": "pet_009",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_001",
+      "name": "Rocky",
+      "species": "dog",
+      "breed": "French Bulldog",
+      "sex": "male",
+      "neutered": false,
+      "dateOfBirth": "2022-02-05",
+      "ageYears": 4,
+      "weightKg": 12.1,
+      "color": "Fawn",
+      "microchipNumber": null,
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-08-30",
+      "nextAppointment": null,
+      "avatar": "/pets/rocky.jpg",
+      "allergies": [
+        "Beef"
+      ],
+      "conditions": [
+        "Brachycephalic airway syndrome"
+      ],
+      "notes": "Avoid prolonged heat exposure.",
+      "vaccinations": []
+    },
+    {
+      "id": "pet_010",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_006",
+      "name": "Daisy",
+      "species": "dog",
+      "breed": "Cocker Spaniel",
+      "sex": "female",
+      "neutered": true,
+      "dateOfBirth": "2021-12-13",
+      "ageYears": 4,
+      "weightKg": 11.8,
+      "color": "Black and tan",
+      "microchipNumber": "985141000890123",
+      "residence": "Philadelphia, PA",
+      "status": "active",
+      "lastVisit": "2026-08-25",
+      "nextAppointment": "2026-10-16T14:00:00-04:00",
+      "avatar": "/pets/daisy.jpg",
+      "allergies": [],
+      "conditions": [],
+      "notes": "Routine wellness care.",
+      "vaccinations": []
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appt_001",
+      "clinicId": "clinic_001",
+      "patientId": "pet_001",
+      "ownerId": "owner_001",
+      "veterinarianId": "user_002",
+      "date": "2026-10-12",
+      "startTime": "10:30",
+      "endTime": "11:00",
+      "durationMinutes": 30,
+      "reason": "Annual wellness exam",
+      "service": "Wellness Exam",
+      "status": "IN_PROGRESS",
+      "room": "Exam Room 2",
+      "notes": "Annual physical and vaccination review."
+    },
+    {
+      "id": "appt_002",
+      "clinicId": "clinic_001",
+      "patientId": "pet_002",
+      "ownerId": "owner_002",
+      "veterinarianId": "user_003",
+      "date": "2026-10-12",
+      "startTime": "11:15",
+      "endTime": "12:00",
+      "durationMinutes": 45,
+      "reason": "Vaccination follow-up",
+      "service": "Vaccination",
+      "status": "CHECKED_IN",
+      "room": "Exam Room 1",
+      "notes": "Review vaccine response."
+    },
+    {
+      "id": "appt_003",
+      "clinicId": "clinic_001",
+      "patientId": "pet_003",
+      "ownerId": "owner_006",
+      "veterinarianId": "user_002",
+      "date": "2026-10-12",
+      "startTime": "11:45",
+      "endTime": "12:30",
+      "durationMinutes": 45,
+      "reason": "Routine checkup",
+      "service": "Wellness Exam",
+      "status": "SCHEDULED",
+      "room": "Exam Room 3",
+      "notes": ""
+    },
+    {
+      "id": "appt_004",
+      "clinicId": "clinic_001",
+      "patientId": "pet_004",
+      "ownerId": "owner_007",
+      "veterinarianId": "user_003",
+      "date": "2026-10-12",
+      "startTime": "13:30",
+      "endTime": "14:15",
+      "durationMinutes": 45,
+      "reason": "Dental examination",
+      "service": "Dental Exam",
+      "status": "SCHEDULED",
+      "room": "Exotic Room",
+      "notes": "Check molar overgrowth."
+    },
+    {
+      "id": "appt_005",
+      "clinicId": "clinic_001",
+      "patientId": "pet_006",
+      "ownerId": "owner_003",
+      "veterinarianId": "user_002",
+      "date": "2026-10-11",
+      "startTime": "09:30",
+      "endTime": "10:00",
+      "durationMinutes": 30,
+      "reason": "Vaccination",
+      "service": "Vaccination",
+      "status": "COMPLETED",
+      "room": "Exam Room 2",
+      "notes": "Owner contacted clinic afterward."
+    },
+    {
+      "id": "appt_006",
+      "clinicId": "clinic_001",
+      "patientId": "pet_007",
+      "ownerId": "owner_008",
+      "veterinarianId": "user_003",
+      "date": "2026-10-14",
+      "startTime": "09:00",
+      "endTime": "09:45",
+      "durationMinutes": 45,
+      "reason": "Ear infection follow-up",
+      "service": "Follow-up",
+      "status": "SCHEDULED",
+      "room": "Exam Room 1",
+      "notes": "Recheck response to treatment."
+    },
+    {
+      "id": "appt_007",
+      "clinicId": "clinic_001",
+      "patientId": "pet_010",
+      "ownerId": "owner_006",
+      "veterinarianId": "user_002",
+      "date": "2026-10-16",
+      "startTime": "14:00",
+      "endTime": "14:45",
+      "durationMinutes": 45,
+      "reason": "Routine checkup",
+      "service": "Wellness Exam",
+      "status": "SCHEDULED",
+      "room": "Exam Room 3",
+      "notes": ""
+    }
+  ],
+  "medicalRecords": [
+    {
+      "id": "record_001",
+      "patientId": "pet_001",
+      "veterinarianId": "user_002",
+      "appointmentId": "appt_001",
+      "date": "2026-10-09",
+      "type": "EXAM",
+      "diagnosis": "Seasonal allergy flare-up",
+      "subjective": "Owner reports increased scratching.",
+      "objective": "Mild erythema around paws.",
+      "assessment": "Likely seasonal dermatitis.",
+      "plan": "Continue allergy management and monitor skin.",
+      "weightKg": 31.4,
+      "temperatureC": 38.7,
+      "heartRateBpm": 92,
+      "respiratoryRateBpm": 24
+    },
+    {
+      "id": "record_002",
+      "patientId": "pet_002",
+      "veterinarianId": "user_003",
+      "appointmentId": "appt_002",
+      "date": "2026-10-05",
+      "type": "VACCINATION",
+      "diagnosis": "Healthy",
+      "subjective": "No concerns reported.",
+      "objective": "Normal physical exam.",
+      "assessment": "Healthy adult cat.",
+      "plan": "Continue routine vaccination schedule.",
+      "weightKg": 4.8,
+      "temperatureC": 38.4,
+      "heartRateBpm": 156,
+      "respiratoryRateBpm": 28
+    },
+    {
+      "id": "record_003",
+      "patientId": "pet_005",
+      "veterinarianId": "user_002",
+      "appointmentId": null,
+      "date": "2026-10-10",
+      "type": "LAB_RESULT",
+      "diagnosis": "Mildly elevated creatinine",
+      "subjective": "Routine blood panel.",
+      "objective": "Creatinine slightly above reference range.",
+      "assessment": "Recommend monitoring renal values.",
+      "plan": "Repeat blood panel in 3 months.",
+      "weightKg": 5.7,
+      "temperatureC": 38.2,
+      "heartRateBpm": 168,
+      "respiratoryRateBpm": 30
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_001",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_001",
+      "patientId": "pet_001",
+      "subject": "Medication question",
+      "preview": "Is it okay to give Cooper his medication with dinner?",
+      "lastMessageAt": "2026-10-11T17:15:00-04:00",
+      "status": "UNREAD",
+      "priority": "NORMAL",
+      "messages": [
+        {
+          "id": "msg_001_01",
+          "senderType": "OWNER",
+          "senderId": "owner_001",
+          "body": "Hi! Cooper is doing well after his visit. Is it okay to give him his medication with dinner?",
+          "sentAt": "2026-10-11T17:13:00-04:00"
+        },
+        {
+          "id": "msg_001_02",
+          "senderType": "STAFF",
+          "senderId": "user_002",
+          "body": "Yes, that is perfectly fine. Please keep an eye on his appetite this evening.",
+          "sentAt": "2026-10-11T17:15:00-04:00"
+        }
+      ]
+    },
+    {
+      "id": "msg_002",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_002",
+      "patientId": "pet_002",
+      "subject": "Luna update",
+      "preview": "Luna seems much more active today.",
+      "lastMessageAt": "2026-10-11T16:10:00-04:00",
+      "status": "UNREAD",
+      "priority": "NORMAL",
+      "messages": [
+        {
+          "id": "msg_002_01",
+          "senderType": "OWNER",
+          "senderId": "owner_002",
+          "body": "Luna seems much more active today.",
+          "sentAt": "2026-10-11T16:10:00-04:00"
+        }
+      ]
+    },
+    {
+      "id": "msg_003",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_003",
+      "patientId": "pet_007",
+      "subject": "Reschedule request",
+      "preview": "I'd like to reschedule Milo's appointment.",
+      "lastMessageAt": "2026-10-11T13:20:00-04:00",
+      "status": "UNREAD",
+      "priority": "NORMAL",
+      "messages": [
+        {
+          "id": "msg_003_01",
+          "senderType": "OWNER",
+          "senderId": "owner_003",
+          "body": "I'd like to reschedule Milo's appointment.",
+          "sentAt": "2026-10-11T13:20:00-04:00"
+        }
+      ]
+    },
+    {
+      "id": "msg_004",
+      "clinicId": "clinic_001",
+      "ownerId": "owner_004",
+      "patientId": "pet_008",
+      "subject": "Visit update",
+      "preview": "Thanks for the update from today.",
+      "lastMessageAt": "2026-10-11T12:05:00-04:00",
+      "status": "READ",
+      "priority": "NORMAL",
+      "messages": [
+        {
+          "id": "msg_004_01",
+          "senderType": "OWNER",
+          "senderId": "owner_004",
+          "body": "Thanks for the update from today.",
+          "sentAt": "2026-10-11T12:05:00-04:00"
+        }
+      ]
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv_001",
+      "clinicId": "clinic_001",
+      "name": "Rabies Vaccines",
+      "category": "Vaccines",
+      "sku": "VAC-RAB-001",
+      "onHand": 12,
+      "reorderLevel": 25,
+      "unit": "units",
+      "status": "LOW_STOCK",
+      "supplier": "VetSupply Co.",
+      "unitCost": 18.5,
+      "expirationDate": "2027-04-30"
+    },
+    {
+      "id": "inv_002",
+      "clinicId": "clinic_001",
+      "name": "Surgical Gauze",
+      "category": "Surgical Supplies",
+      "sku": "GAU-001",
+      "onHand": 45,
+      "reorderLevel": 30,
+      "unit": "units",
+      "status": "RESTOCK_SOON",
+      "supplier": "MedicalVet Supplies",
+      "unitCost": 2.25,
+      "expirationDate": null
+    },
+    {
+      "id": "inv_003",
+      "clinicId": "clinic_001",
+      "name": "Heartworm Preventative",
+      "category": "Medication",
+      "sku": "MED-HW-001",
+      "onHand": 86,
+      "reorderLevel": 20,
+      "unit": "units",
+      "status": "IN_STOCK",
+      "supplier": "PetPharm",
+      "unitCost": 14.75,
+      "expirationDate": "2027-08-31"
+    },
+    {
+      "id": "inv_004",
+      "clinicId": "clinic_001",
+      "name": "Amoxicillin 250mg",
+      "category": "Medication",
+      "sku": "MED-AMX-250",
+      "onHand": 64,
+      "reorderLevel": 15,
+      "unit": "tablets",
+      "status": "IN_STOCK",
+      "supplier": "PetPharm",
+      "unitCost": 0.42,
+      "expirationDate": "2027-02-28"
+    },
+    {
+      "id": "inv_005",
+      "clinicId": "clinic_001",
+      "name": "IV Catheter 22G",
+      "category": "Medical Supplies",
+      "sku": "IV-22G-001",
+      "onHand": 18,
+      "reorderLevel": 20,
+      "unit": "units",
+      "status": "LOW_STOCK",
+      "supplier": "MedicalVet Supplies",
+      "unitCost": 1.1,
+      "expirationDate": null
+    },
+    {
+      "id": "inv_006",
+      "clinicId": "clinic_001",
+      "name": "Exam Gloves Medium",
+      "category": "Medical Supplies",
+      "sku": "GLV-M-001",
+      "onHand": 240,
+      "reorderLevel": 80,
+      "unit": "pairs",
+      "status": "IN_STOCK",
+      "supplier": "MedicalVet Supplies",
+      "unitCost": 0.18,
+      "expirationDate": null
+    }
+  ],
+  "dashboard": {
+    "activePatients": 1284,
+    "totalClients": 1284,
+    "today": {
+      "date": "2026-10-12",
+      "appointments": 24,
+      "revenue": 4850,
+      "urgentCases": 3,
+      "checkedIn": 6
+    },
+    "patientQueue": {
+      "inSurgery": 2,
+      "recovery": 1,
+      "all": 8
+    },
+    "patientDemographics": {
+      "canine": 64,
+      "feline": 28,
+      "other": 8
+    },
+    "clinicActivity": [
+      {
+        "day": "MON",
+        "appointments": 18
+      },
+      {
+        "day": "TUE",
+        "appointments": 27
+      },
+      {
+        "day": "WED",
+        "appointments": 34
+      },
+      {
+        "day": "THU",
+        "appointments": 22
+      },
+      {
+        "day": "FRI",
+        "appointments": 29
+      },
+      {
+        "day": "SAT",
+        "appointments": 15
+      },
+      {
+        "day": "SUN",
+        "appointments": 31
+      }
+    ]
+  },
+  "reports": {
+    "period": "2026-10",
+    "appointmentsOverview": {
+      "totalAppointments": 184,
+      "completed": 142,
+      "cancelled": 12,
+      "noShow": 8,
+      "scheduled": 22
+    },
+    "serviceBreakdown": [
+      {
+        "service": "Wellness Exams",
+        "percentage": 42
+      },
+      {
+        "service": "Surgery",
+        "percentage": 28
+      },
+      {
+        "service": "Vaccinations",
+        "percentage": 18
+      },
+      {
+        "service": "Other Services",
+        "percentage": 12
+      }
+    ],
+    "clinicHighlights": {
+      "patientSatisfaction": 96,
+      "averageWaitTimeMinutes": 15,
+      "appointmentCompletionRate": 92,
+      "returningClientsRate": 74
+    },
+    "weeklyAppointments": [
+      {
+        "week": "W1",
+        "appointments": 31
+      },
+      {
+        "week": "W2",
+        "appointments": 38
+      },
+      {
+        "week": "W3",
+        "appointments": 44
+      },
+      {
+        "week": "W4",
+        "appointments": 33
+      },
+      {
+        "week": "W5",
+        "appointments": 38
+      }
+    ]
+  },
+  "notifications": [
+    {
+      "id": "notification_001",
+      "type": "MESSAGE",
+      "title": "Message from David Wilson",
+      "body": "Buddy seems a bit lethargic after his vaccination yesterday. Is this a normal side effect or should I bring him in?",
+      "priority": "NORMAL",
+      "read": false,
+      "createdAt": "2026-10-11T17:15:00-04:00",
+      "ownerId": "owner_003",
+      "patientId": "pet_006"
+    },
+    {
+      "id": "notification_002",
+      "type": "EMERGENCY_CHECK_IN",
+      "title": "Emergency Check-in: Luna",
+      "body": "Patient has arrived at the clinic for an unscheduled visit. Reason: Acute abdominal pain. Triage required in Exam Room 4.",
+      "priority": "HIGH",
+      "read": false,
+      "createdAt": "2026-10-11T17:00:00-04:00",
+      "ownerId": "owner_002",
+      "patientId": "pet_002"
+    },
+    {
+      "id": "notification_003",
+      "type": "LAB_RESULT",
+      "title": "Lab Results Ready: Max",
+      "body": "Blood panel for Max is completed. All values are within normal ranges except for slightly elevated creatinine.",
+      "priority": "NORMAL",
+      "read": true,
+      "createdAt": "2026-10-11T15:00:00-04:00",
+      "ownerId": "owner_001",
+      "patientId": "pet_005"
+    },
+    {
+      "id": "notification_004",
+      "type": "SYSTEM",
+      "title": "System Update: v2.4.0 Deployment",
+      "body": "CODA has been updated. New features include bulk prescription printing and automated SMS reminders for wellness checks.",
+      "priority": "LOW",
+      "read": true,
+      "createdAt": "2026-10-11T12:00:00-04:00"
+    },
+    {
+      "id": "notification_005",
+      "type": "APPOINTMENT",
+      "title": "Appointment Confirmed: Bailey",
+      "body": "Owner Jim Halpert confirmed Bailey's appointment for tomorrow at 11:45 AM. Pre-surgical instructions sent.",
+      "priority": "NORMAL",
+      "read": true,
+      "createdAt": "2026-10-11T10:00:00-04:00",
+      "ownerId": "owner_006",
+      "patientId": "pet_003"
+    }
+  ],
+  "schedule": {
+    "date": "2026-10-12",
+    "items": [
+      {
+        "id": "schedule_001",
+        "userId": "user_001",
+        "title": "Main Surgery",
+        "startTime": "13:00",
+        "endTime": "15:30",
+        "type": "SURGERY"
+      },
+      {
+        "id": "schedule_002",
+        "userId": "user_001",
+        "title": "Staff Meeting",
+        "startTime": "16:00",
+        "endTime": "17:00",
+        "type": "MEETING"
+      }
+    ]
+  },
+  "holidays": [
+    {
+      "id": "holiday_001",
+      "date": "2026-11-11",
+      "name": "Veterans Day",
+      "clinicClosed": true,
+      "noticeStatus": "SENT"
+    },
+    {
+      "id": "holiday_002",
+      "date": "2026-11-26",
+      "name": "Thanksgiving",
+      "clinicClosed": false,
+      "specialHours": "08:00-12:00",
+      "noticeStatus": "DRAFT"
+    },
+    {
+      "id": "holiday_003",
+      "date": "2026-12-25",
+      "name": "Christmas Day",
+      "clinicClosed": true,
+      "noticeStatus": "DRAFT"
+    }
+  ],
+  "settings": {
+    "clinicIdentity": {
+      "name": "North Veterinary Care",
+      "address": "450 Veterinary Way, Tower A, Philadelphia, PA 19103",
+      "phone": "+1 (215) 555-0148",
+      "email": "contact@northclinic.example"
+    },
+    "notifications": {
+      "emailAlerts": true,
+      "smsReminders": true,
+      "lowStockAlerts": true
+    },
+    "localization": {
+      "language": "en-US",
+      "timezone": "America/New_York",
+      "currency": "USD",
+      "dateFormat": "MMM dd, yyyy",
+      "timeFormat": "h:mm a"
+    },
+    "appearance": {
+      "theme": "dark"
+    }
+  },
+  "uiOptions": {
+    "appointmentStatuses": [
+      "SCHEDULED",
+      "CHECKED_IN",
+      "IN_PROGRESS",
+      "READY_FOR_DISCHARGE",
+      "COMPLETED",
+      "CANCELLED",
+      "NO_SHOW"
+    ],
+    "patientStatuses": [
+      "active",
+      "inactive",
+      "deceased"
+    ],
+    "species": [
+      "dog",
+      "cat",
+      "rabbit",
+      "bird",
+      "reptile",
+      "other"
+    ],
+    "inventoryStatuses": [
+      "IN_STOCK",
+      "RESTOCK_SOON",
+      "LOW_STOCK",
+      "OUT_OF_STOCK"
+    ],
+    "userRoles": [
+      "CLINIC_OWNER",
+      "CHIEF_VET",
+      "VETERINARIAN",
+      "VETERINARY_TECHNICIAN",
+      "RECEPTIONIST",
+      "PET_OWNER"
+    ]
+  }
+}
