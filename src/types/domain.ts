@@ -76,6 +76,18 @@ export interface Appointment {
   notes: string;
 }
 
+export interface Clinic { id: string; name: string; address: string; phone: string; email: string; timezone: string; }
+
+export interface User { id: string; clinicId: string; displayName: string; role: string; email: string; avatar?: string; }
+
+export interface MedicalRecord { id: string; patientId: string; veterinarianId: string; date: string; diagnosis: string; treatment: string; notes: string; }
+
+export interface Conversation { id: string; clinicId: string; ownerId: string; patientId: string; subject: string; preview: string; lastMessageAt: string; status: string; priority: string; messages: Message[]; }
+
+export interface Message { id: string; senderType: "owner" | "staff"; senderId: string; body: string; sentAt: string; }
+
+export interface Notification { id: string; clinicId: string; type: string; title: string; message: string; read: boolean; createdAt: string; }
+
 export interface InventoryItem {
   id: string;
   clinicId: string;
