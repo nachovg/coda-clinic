@@ -1,24 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { ClinicShell } from '@/components/clinic/ClinicShell'
 import { codaMockData } from '@/src/lib/mock-data'
-import type { Patient } from '@/src/types/domain'
-import { getPatients, searchPatients } from '@/src/lib/repositories/patients.repository'
+import { clinicNavigation } from '@/src/config/navigation'
 import {
-  AlertTriangle, Bell, CalendarDays, Check, ClipboardCheck, ChevronDown, FileText, Grid2X2,
-  ListFilter, MapPin, Menu, MessageSquare, MoreHorizontal, Package, PawPrint, PieChart,
-  Plus, Search, Settings, Stethoscope, Users, WalletCards, X, Clock3, CheckCircle2,
+  AlertTriangle, CalendarDays, Check, ClipboardCheck, ChevronDown, ListFilter,
+  MoreHorizontal, Package, PawPrint, Plus, Search, Stethoscope, Users, WalletCards,
+  Clock3, CheckCircle2,
 } from 'lucide-react'
-
-const navItems = [
-  { label: 'Dashboard', icon: Grid2X2 },
-  { label: 'Appointments', icon: CalendarDays },
-  { label: 'Patients', icon: Users },
-  { label: 'Messages', icon: MessageSquare, badge: '12' },
-  { label: 'Inventory', icon: Package },
-  { label: 'Reports', icon: PieChart },
-]
 
 const ownerById = new Map(codaMockData.owners.map((owner) => [owner.id, owner]))
 const vetById = new Map(codaMockData.users.map((user) => [user.id, user]))
@@ -45,10 +36,6 @@ const patients = codaMockData.patients.map((patient) => {
   }
 })
 
-function BrandMark() { return <div className="brand-mark"><PawPrint size={29} strokeWidth={2.8} /></div> }
-function Sidebar({ active, setActive }: { active: string; setActive: (value: string) => void }) {
-  return <aside className="sidebar"><div className="brand"><BrandMark /><span>CODA</span></div><nav className="nav-list" aria-label="Primary navigation">{navItems.map(({ label, icon: Icon, badge }) => <button key={label} className={`nav-item ${active === label ? 'active' : ''}`} onClick={() => setActive(label)}><Icon size={23} /><span>{label}</span>{badge && <b className="nav-badge">{badge}</b>}</button>)}</nav><div className="profile"><div className="profile-avatar">JM</div><div><strong>Dr. Julian Miller</strong><span>Chief Vet</span></div></div></aside>
-}
 function StatCard({ icon: Icon, label, value, change, tone }: { icon: typeof CalendarDays; label: string; value: string; change: string; tone: string }) { return <section className="stat-card"><div className={`stat-icon ${tone}`}><Icon size={25} /></div><span className={`stat-change ${tone}`}>{change}</span><div className="stat-label">{label}</div><strong className="stat-value">{value}</strong></section> }
 function PatientQueue() { const [filter, setFilter] = useState('All'); return <section className="panel queue-panel"><header className="panel-header"><h2>Patient Queue</h2><div className="tabs">{['All', 'In Surgery', 'Recovery'].map(item => <button key={item} className={filter === item ? 'selected' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div></header><div className="table-head"><span>PATIENT</span><span>STATUS</span><span>TIME</span><span>VET</span><span>ACTION</span></div><div className="patient-rows">{patients.slice(0, 3).map(patient => <div className="patient-row" key={patient.name}><div className="patient-cell"><img src={patient.image} alt={`${patient.name}, ${patient.meta}`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><div><strong>{patient.name}</strong><span>{patient.meta}</span></div></div><span className={`status-pill ${patient.statusType}`}>{patient.statusType === 'checked' && <Check size={12} />}{patient.status}</span><strong className="appt-time">{patient.time}</strong><div className="vet"><span className="vet-avatar">{patient.vet === 'Dr. Sarah' ? 'S' : 'J'}</span><span>{patient.vet}</span></div><button className="icon-button" aria-label={`More actions for ${patient.name}`}><MoreHorizontal size={19} /></button></div>)}</div><button className="schedule-link">View Full Schedule</button></section> }
 function Messages() { return <section className="panel messages-panel"><header className="panel-header"><h2>Recent Messages</h2><ListFilter size={23} className="muted-icon" /></header><div className="messages-list">{[['EW', 'Emily Watson', 'Is it okay to give Cooper his medication?', '2 MINS AGO', 'online'], ['DC', 'David Chen', 'Luna seems much more active today.', '1 HOUR AGO', 'away'], ['MR', 'Mark Richards', "I'd like to reschedule Oliver's checkup.", '4 HOURS AGO', '']].map(([initials, name, copy, time, status]) => <div className="message" key={name}><div className={`message-avatar ${initials === 'EW' ? 'dark' : ''}`}>{initials}</div><div className="message-copy"><strong>{name}</strong><span>{copy}</span><small><i className={status}></i>{time}</small></div></div>)}</div><button className="communication-button">View Communication Hub</button></section> }
@@ -56,42 +43,21 @@ function ClinicActivity() { return <section className="panel chart-panel"><h2>Cl
 function Demographics() { return <section className="panel demographics"><h2>Patient Demographics</h2>{[['Canine','64%','blue'],['Feline','28%','purple'],['Other','8%','orange']].map(([label, value, color]) => <div className="demo-row" key={label}><div><span>{label}</span><b>{value}</b></div><div className="progress"><i className={color} style={{ width: value }} /></div></div>)}</section> }
 function InventoryAlerts() { return <section className="panel inventory"><h2><AlertTriangle size={21} /> Inventory Alerts</h2><div className="stock-row"><div><strong>Rabies Vaccines</strong><span className="danger">Low Stock: 12 units</span></div><button>Reorder</button></div><div className="stock-row"><div><strong>Surgical Gauze</strong><span className="warning">Restock Soon: 45 units</span></div><button>Reorder</button></div></section> }
 function Dashboard() { return <div className="content"><div className="stats-grid"><StatCard icon={ClipboardCheck} label="TODAY'S APPOINTMENTS" value="24" change="+12%" tone="blue" /><StatCard icon={PawPrint} label="ACTIVE PATIENTS" value="1,284" change="+4%" tone="purple" /><StatCard icon={WalletCards} label="REVENUE (TODAY)" value="$4,850" change="0%" tone="orange" /><StatCard icon={AlertTriangle} label="URGENT CASES" value="3" change="High" tone="red" /></div><div className="dashboard-grid"><div className="left-column"><PatientQueue /><div className="lower-grid"><ClinicActivity /><Demographics /></div></div><div className="right-column"><Messages /><InventoryAlerts /><section className="schedule-card"><h2>Your Schedule</h2><div><strong>Main Surgery</strong><span>1:00 PM - 3:30 PM</span></div><div><strong>Staff Meeting</strong><span>4:00 PM - 5:00 PM</span></div></section></div></div></div> }
-function PatientsView() {
-  const [query, setQuery] = useState('')
-  const [directoryPatients, setDirectoryPatients] = useState<Patient[]>([])
-  const [totalPatients, setTotalPatients] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    let isCurrent = true
-
-    void getPatients()
-      .then((result) => {
-        if (!isCurrent) return
-        setDirectoryPatients(result)
-        setTotalPatients(result.length)
-      })
-      .finally(() => {
-        if (isCurrent) setIsLoading(false)
-      })
-
-    return () => {
-      isCurrent = false
-    }
-  }, [])
-
-  const handleSearch = async (value: string) => {
-    setQuery(value)
-    const matches = await searchPatients(value)
-    setDirectoryPatients(matches)
-  }
-
-  return <div className="content inner-page"><div className="page-heading"><div><h1>Pet Patients</h1><p>Manage all clinic patients and their medical records.</p></div><div className="heading-actions"><div className="table-search"><Search size={20} /><input value={query} onChange={(event) => void handleSearch(event.target.value)} placeholder="Search patients..." aria-label="Search patients" /></div><button className="new-appointment"><Plus size={18} /> Add New Patient</button></div></div><section className="patient-directory"><div className="directory-head"><span>PET</span><span>BREED</span><span>OWNER</span><span>LAST VISIT</span><span>MEDICAL FILE</span><span>RESIDENCE</span></div>{isLoading ? <div className="patient-empty-state" role="status">Loading patients...</div> : directoryPatients.length > 0 ? directoryPatients.map(patient => { const owner = ownerById.get(patient.ownerId); return <div className="directory-row" key={patient.id}><div className="patient-cell"><img src={patient.avatar} alt={`${patient.name} pet`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><strong>{patient.name}</strong></div><span>{patient.breed}</span><span>{owner?.displayName ?? 'Clinic patient'}</span><span>{patient.lastVisit}</span><FileText className="file-icon" size={22} /><span className="muted-text">{patient.residence}</span></div> }) : <div className="patient-empty-state" role="status">{query.trim() ? 'No patients found.' : 'No patients available.'}</div>}<footer>Showing {directoryPatients.length} of {totalPatients} patients <div className="pagination"><button disabled><ChevronDown size={16} /></button><button className="current">1</button><button>2</button><button>3</button><button><ChevronDown size={16} /></button></div></footer></section><div className="patient-summary"><section><h2><CalendarDays size={23} /> Appointment Status</h2><div className="summary-cards"><div className="summary-card"><span>PENDING</span><strong>12</strong><b className="warning">! &nbsp; Requires clinic review</b></div><div className="summary-card"><span>APPROVED</span><strong>48</strong><b className="success">↗ &nbsp; +12% from last week</b></div></div></section><section><h2>Patient Residences</h2><div className="residence-card"><MapPin size={22} /><strong>Top region: Pennsylvania</strong></div></section></div></div>
-}
 function AppointmentsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Appointments</h1><p>Coordinate today&apos;s visits, procedures, and recovery schedules.</p></div><button className="new-appointment"><Plus size={18} /> New Appointment</button></div><div className="appointment-toolbar"><button className="date-button"><CalendarDays size={18} /> Wednesday, November 22, 2023 <ChevronDown size={16} /></button><div className="tabs"><button className="selected">All appointments</button><button>In surgery</button><button>Recovery</button></div></div><section className="appointment-list">{patients.map((patient, index) => <div className="appointment-card" key={patient.name}><div className="appointment-time"><strong>{patient.time}</strong><span>{index === 0 ? '30 min' : '45 min'}</span></div><div className="appointment-pet"><img src={patient.image} alt={`${patient.name} pet`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><div><strong>{patient.name}</strong><span>{patient.meta}</span></div></div><div><span className="eyebrow">REASON FOR VISIT</span><strong>{index === 0 ? 'Annual wellness exam' : index === 1 ? 'Vaccination follow-up' : 'Routine checkup'}</strong></div><div><span className="eyebrow">VETERINARIAN</span><strong>{patient.vet}</strong></div><span className={`status-pill ${patient.statusType}`}>{patient.status}</span><button className="icon-button"><MoreHorizontal size={20} /></button></div>)}</section></div> }
 function MessagesView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Messages</h1><p>Keep pet owners informed and connected with the clinic.</p></div><button className="new-appointment"><Plus size={18} /> New Message</button></div><div className="messages-layout"><section className="panel conversation-list"><div className="conversation-search"><Search size={18} /><input placeholder="Search conversations" /></div>{['Emily Watson','David Chen','Mark Richards','Eleanor Vance'].map((name, index) => <button className={`conversation ${index === 0 ? 'selected' : ''}`} key={name}><div className="message-avatar">{name.split(' ').map(n => n[0]).join('')}</div><div><strong>{name}</strong><span>{index === 0 ? 'Is it okay to give Cooper his medication?' : 'Thanks for the update from today.'}</span></div><small>{index + 2}m</small></button>)}</section><section className="panel thread"><header><div className="message-avatar">EW</div><div><strong>Emily Watson</strong><span>Online now</span></div></header><div className="thread-body"><div className="bubble received">Hi! Cooper is doing well after his visit. Is it okay to give him his medication with dinner?</div><div className="bubble sent">Yes, that is perfectly fine. Please keep an eye on his appetite this evening.</div></div><div className="composer"><input placeholder="Write a message..." /><button aria-label="Send message"><Plus size={18} /></button></div></section></div></div> }
 function InventoryView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Inventory</h1><p>Track medications, supplies, and clinic reorder levels.</p></div><button className="new-appointment"><Plus size={18} /> Add Inventory Item</button></div><div className="inventory-stats"><StatCard icon={Package} label="TOTAL ITEMS" value="248" change="+8%" tone="blue" /><StatCard icon={AlertTriangle} label="LOW STOCK" value="12" change="Action" tone="red" /><StatCard icon={CheckCircle2} label="WELL STOCKED" value="236" change="96%" tone="purple" /></div><section className="inventory-table"><div className="directory-head"><span>ITEM</span><span>CATEGORY</span><span>ON HAND</span><span>REORDER LEVEL</span><span>STATUS</span><span>ACTION</span></div>{[['Rabies Vaccines','Vaccines','12 units','25 units','Low stock','danger'],['Surgical Gauze','Surgical supplies','45 units','30 units','Restock soon','warning'],['Heartworm Preventative','Medication','86 units','20 units','In stock','success'],['Dental Scaling Kits','Equipment','18 units','10 units','In stock','success']].map(([item, category, onHand, reorder, status, tone]) => <div className="directory-row inventory-row" key={item}><strong>{item}</strong><span>{category}</span><span>{onHand}</span><span>{reorder}</span><b className={tone}>{status}</b><button className="reorder-button">{tone === 'success' ? 'View' : 'Reorder'}</button></div>)}</section></div> }
 function SettingsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Profile Settings</h1><p>Manage your CODA clinic profile and professional details.</p></div><button className="new-appointment"><Check size={18} /> Save Changes</button></div><section className="settings-card"><h2><Users size={21} /> Personal Information</h2><div className="settings-grid"><label>FIRST NAME<input defaultValue="Julian" /></label><label>LAST NAME<input defaultValue="Miller" /></label><label>PROFESSIONAL EMAIL<input defaultValue="j.miller@coda.health" /></label><label>PHONE NUMBER<input defaultValue="+1 (555) 014-2840" /></label></div></section><section className="settings-card"><h2><Stethoscope size={21} /> Clinic Details</h2><div className="settings-grid"><label className="full">CLINIC NAME<input defaultValue="CODA North Clinic" /></label><label className="full">CLINIC ADDRESS<textarea defaultValue="450 Medical Plaza Dr.\nNew York, NY 10001" /></label></div></section></div> }
 function ReportsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Reports</h1><p>Understand clinic performance with clear, actionable insights.</p></div><button className="date-button"><CalendarDays size={18} /> This month <ChevronDown size={16} /></button></div><div className="reports-grid"><section className="panel report-chart"><h2>Appointments Overview</h2><div className="report-total"><strong>184</strong><span>appointments this month</span></div><div className="bars report-bars">{[48,65,44,78,58,91,70,84,62,96,73,88].map((height, index) => <div className={`bar-wrap ${index === 9 ? 'highlight' : ''}`} key={index}><div className="bar" style={{ height: `${height}%` }} /></div>)}</div><div className="days">{['W1','W2','W3','W4','W5'].map(day => <span key={day}>{day}</span>)}</div></section><section className="panel report-breakdown"><h2>Service Breakdown</h2>{[['Wellness exams','42%','blue'],['Surgery','28%','purple'],['Vaccinations','18%','orange'],['Other services','12%','green']].map(([label, value, color]) => <div className="demo-row" key={label}><div><span>{label}</span><b>{value}</b></div><div className="progress"><i className={color} style={{ width: value }} /></div></div>)}</section><section className="panel report-metrics"><h2>Clinic Highlights</h2><div><CheckCircle2 /><strong>96%</strong><span>Patient satisfaction</span></div><div><Clock3 /><strong>18 min</strong><span>Average wait time</span></div><div><Stethoscope /><strong>82%</strong><span>Follow-up completion</span></div></section></div></div> }
 
-export default function Page() { const router = useRouter(); const pathname = usePathname(); const routeActive = navItems.find((item) => `/${item.label.toLowerCase()}` === pathname)?.label ?? 'Dashboard'; const [active, setActive] = useState(routeActive); const [mobileOpen, setMobileOpen] = useState(false); const renderView = () => ({ Dashboard: <Dashboard />, Patients: <PatientsView />, Appointments: <AppointmentsView />, Messages: <MessagesView />, Inventory: <InventoryView />, Reports: <ReportsView />, Settings: <SettingsView /> }[active] || <Dashboard />); const navigate = (value: string) => { setActive(value); setMobileOpen(false); router.push(value === 'Dashboard' ? '/dashboard' : `/${value.toLowerCase()}`) }; return <div className="app-shell"><div className={mobileOpen ? 'mobile-backdrop show' : 'mobile-backdrop'} onClick={() => setMobileOpen(false)} /><div className={mobileOpen ? 'sidebar-wrap open' : 'sidebar-wrap'}><Sidebar active={active} setActive={navigate} /></div><main className="main-area"><header className="topbar"><button className="mobile-menu" onClick={() => setMobileOpen(true)} aria-label="Open menu"><Menu size={23} /></button><div className="search"><Search size={22} /><input aria-label="Search" placeholder="Search patients, owners or records..." /></div><button className="clinic-selector"><MapPin size={17} /> North Clinic, Tower A <ChevronDown size={15} /></button><button className="top-icon" aria-label="Notifications"><Bell size={22} /></button><button className="new-appointment"><Plus size={18} /> New Appointment</button></header>{renderView()}</main></div> }
+export default function Page() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const active = clinicNavigation.find((item) => item.href === pathname)?.label ?? 'Dashboard'
+  const renderView = () => {
+    if (active === 'Patients') return null
+    return ({ Dashboard: <Dashboard />, Appointments: <AppointmentsView />, Messages: <MessagesView />, Inventory: <InventoryView />, Reports: <ReportsView />, Settings: <SettingsView /> }[active] || <Dashboard />)
+  }
+  const navigate = (item: (typeof clinicNavigation)[number]) => router.push(item.href)
+
+  return <ClinicShell active={active} onNavigate={navigate}>{renderView()}</ClinicShell>
+}
