@@ -1,7 +1,7 @@
 import { codaMockData } from "@/src/lib/mock-data";
 import type { Conversation } from "@/src/types/domain";
 
-const conversations = codaMockData.messages as Conversation[];
+const conversations = codaMockData.messages;
 
 export async function getConversations(): Promise<Conversation[]> {
   return conversations;

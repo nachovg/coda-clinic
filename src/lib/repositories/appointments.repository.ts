@@ -1,7 +1,7 @@
 import { codaMockData } from "@/src/lib/mock-data";
 import type { Appointment } from "@/src/types/domain";
 
-const appointments = codaMockData.appointments as Appointment[];
+const appointments = codaMockData.appointments;
 
 export async function getAppointments(): Promise<Appointment[]> {
   return appointments;

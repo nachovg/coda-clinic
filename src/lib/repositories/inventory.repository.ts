@@ -1,7 +1,7 @@
 import { codaMockData } from "@/src/lib/mock-data";
 import type { InventoryItem } from "@/src/types/domain";
 
-const items = codaMockData.inventory as InventoryItem[];
+const items = codaMockData.inventory;
 
 export async function getInventoryItems(): Promise<InventoryItem[]> {
   return items;

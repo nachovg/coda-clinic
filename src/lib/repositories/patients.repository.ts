@@ -1,7 +1,7 @@
 import { codaMockData } from "@/src/lib/mock-data";
 import type { Patient } from "@/src/types/domain";
 
-const patients = codaMockData.patients as Patient[];
+const patients = codaMockData.patients;
 
 export async function getPatients(): Promise<Patient[]> {
   return patients;
