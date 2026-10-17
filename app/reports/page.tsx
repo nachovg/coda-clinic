@@ -1,5 +1,5 @@
 import Page from '@/app/page'
 
 export default function ReportsRoute() {
-  return <Page initialActive="Reports" />
+  return <Page />
 }
