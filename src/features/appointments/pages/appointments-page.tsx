@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { CalendarDays, ChevronDown, Pencil, Plus, X } from 'lucide-react'
+import { CalendarDays, ChevronDown, Pencil, Plus, X, XCircle } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
 import { getAppointments, updateAppointmentStatus } from '@/src/lib/repositories/appointments.repository'
 import { getPatients } from '@/src/lib/repositories/patients.repository'
@@ -32,8 +32,9 @@ function getStatusLabel(status: Appointment['status']): string {
   return status.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 }
 
-function getStatusClass(status: Appointment['status']): 'appointment-in-progress' | 'checked' | 'scheduled' {
+function getStatusClass(status: Appointment['status']): 'appointment-in-progress' | 'appointment-cancelled' | 'checked' | 'scheduled' {
   if (status === 'IN_PROGRESS') return 'appointment-in-progress'
+  if (status === 'CANCELLED') return 'appointment-cancelled'
   if (status === 'CHECKED_IN' || status === 'COMPLETED') return 'checked'
   return 'scheduled'
 }
@@ -87,6 +88,15 @@ export default function AppointmentsPage() {
   }
 
   const handleStatusChange = async (appointmentId: string, status: Appointment['status']) => {
+    const appointment = appointments.find((item) => item.id === appointmentId)
+    if (!appointment) return
+    if (status === 'CANCELLED') {
+      const patientName = patientById.get(appointment.patientId)?.name
+      const appointmentLabel = patientName ? `${patientName} on ${formatDate(appointment.date)}` : `appointment ${appointment.id} on ${formatDate(appointment.date)}`
+      const confirmed = window.confirm(`Cancel the appointment for ${appointmentLabel}? It will remain in the appointment history with Cancelled status.`)
+      if (!confirmed) return
+    }
+
     setUpdatingAppointmentId(appointmentId)
     setStatusUpdateError(null)
     try {
@@ -180,7 +190,11 @@ export default function AppointmentsPage() {
               </div>
               <select
                 className={`status-pill ${getStatusClass(appointment.status)}`}
-                style={appointment.status === 'IN_PROGRESS' ? { color: '#ffad00', borderColor: '#7c5712', backgroundColor: '#3b2e13' } : undefined}
+                style={appointment.status === 'IN_PROGRESS'
+                  ? { color: '#ffad00', borderColor: '#7c5712', backgroundColor: '#3b2e13' }
+                  : appointment.status === 'CANCELLED'
+                    ? { color: '#fb7185', borderColor: '#7f1d1d', backgroundColor: '#3b1820' }
+                    : undefined}
                 aria-label={`Update status for appointment ${appointment.id}`}
                 value={appointment.status}
                 disabled={updatingAppointmentId === appointment.id}
@@ -194,7 +208,21 @@ export default function AppointmentsPage() {
                 <option value="CANCELLED">Cancelled</option>
                 <option value="NO_SHOW">No Show</option>
               </select>
-              <Link href={`/appointments/${encodeURIComponent(appointment.id)}/edit`} className="icon-button" aria-label={`Edit appointment ${appointment.id}`}><Pencil size={18} /></Link>
+              <div className="flex items-center gap-3">
+                <Link href={`/appointments/${encodeURIComponent(appointment.id)}/edit`} className="icon-button" aria-label={`Edit appointment ${appointment.id}`}><Pencil size={18} /></Link>
+                {appointment.status !== 'CANCELLED' && (
+                  <button
+                    type="button"
+                    className="icon-button text-rose-400 hover:text-rose-300 disabled:opacity-50"
+                    aria-label={`Cancel appointment for ${patient?.name ?? appointment.id} on ${formatDate(appointment.date)}`}
+                    title="Cancel Appointment"
+                    disabled={updatingAppointmentId === appointment.id}
+                    onClick={() => void handleStatusChange(appointment.id, 'CANCELLED')}
+                  >
+                    <XCircle size={18} />
+                  </button>
+                )}
+              </div>
             </div>
           )
         })}
