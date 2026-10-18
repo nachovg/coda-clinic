@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { CalendarDays, ChevronDown, MoreHorizontal, Plus } from 'lucide-react'
+import { CalendarDays, ChevronDown, MoreHorizontal, Plus, X } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
 import { getAppointments } from '@/src/lib/repositories/appointments.repository'
 import { getPatients } from '@/src/lib/repositories/patients.repository'
@@ -48,6 +48,8 @@ export default function AppointmentsPage() {
   const [patients, setPatients] = useState<Patient[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [selectedDate, setSelectedDate] = useState('')
+  const dateInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     let isCurrent = true
@@ -71,6 +73,16 @@ export default function AppointmentsPage() {
   }, [])
 
   const patientById = new Map(patients.map((patient) => [patient.id, patient]))
+  const filteredAppointments = selectedDate
+    ? appointments.filter((appointment) => appointment.date === selectedDate)
+    : appointments
+
+  const openDatePicker = () => {
+    const dateInput = dateInputRef.current
+    if (!dateInput) return
+    if (typeof dateInput.showPicker === 'function') dateInput.showPicker()
+    else dateInput.click()
+  }
 
   return (
     <div className="content inner-page">
@@ -83,8 +95,30 @@ export default function AppointmentsPage() {
       </div>
 
       <div className="appointment-toolbar">
-        <button className="date-button"><CalendarDays size={18} /> All appointment dates <ChevronDown size={16} /></button>
-        <div className="tabs"><button className="selected">All appointments</button><button>In surgery</button><button>Recovery</button></div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button type="button" className="date-button" onClick={openDatePicker}>
+            <CalendarDays size={18} /> {selectedDate ? formatDate(selectedDate) : 'All appointment dates'} <ChevronDown size={16} />
+          </button>
+          <input
+            ref={dateInputRef}
+            className="sr-only"
+            type="date"
+            aria-label="Filter appointments by date"
+            tabIndex={-1}
+            value={selectedDate}
+            onChange={(event) => setSelectedDate(event.target.value)}
+          />
+          {selectedDate && (
+            <button type="button" className="date-button" onClick={() => setSelectedDate('')} aria-label="Clear date filter">
+              <X size={17} /> Clear date
+            </button>
+          )}
+        </div>
+        <div className="tabs">
+          <button type="button" className="selected" aria-pressed="true">All appointments</button>
+          <button type="button" aria-disabled="true" title="Appointment records do not identify surgery cases.">In surgery</button>
+          <button type="button" aria-disabled="true" title="Recovery is available only as an aggregate dashboard metric.">Recovery</button>
+        </div>
       </div>
 
       <section className="appointment-list" aria-label="Appointments">
@@ -92,9 +126,9 @@ export default function AppointmentsPage() {
           <div className="p-6 text-slate-400" role="status">Loading appointments...</div>
         ) : loadError ? (
           <div className="p-6 text-rose-300" role="alert">Appointments could not be loaded.</div>
-        ) : appointments.length === 0 ? (
-          <div className="p-6 text-slate-400" role="status">No appointments available.</div>
-        ) : appointments.map((appointment) => {
+        ) : filteredAppointments.length === 0 ? (
+          <div className="p-6 text-slate-400" role="status">{selectedDate ? `No appointments on ${formatDate(selectedDate)}.` : 'No appointments available.'}</div>
+        ) : filteredAppointments.map((appointment) => {
           const patient = patientById.get(appointment.patientId)
           const owner = ownerById.get(appointment.ownerId)
           const veterinarian = veterinarianById.get(appointment.veterinarianId)
