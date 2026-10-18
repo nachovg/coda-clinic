@@ -134,7 +134,7 @@ export default function PatientDetailPage({ patientId }: { patientId: string }) 
             <DetailItem label="Weight" value={`${patient.weightKg} kg`} />
             <DetailItem label="Color" value={patient.color} />
             <DetailItem label="Residence" value={patient.residence} />
-            <DetailItem label="Last visit" value={formatDate(patient.lastVisit)} />
+            <DetailItem label="Last visit" value={patient.lastVisit ? formatDate(patient.lastVisit) : 'No previous visits recorded'} />
             <DetailItem label="Next appointment" value={patient.nextAppointment ? formatDateTime(patient.nextAppointment) : 'No appointment scheduled'} />
             <DetailItem label="Microchip" value={patient.microchipNumber ?? 'Not recorded'} />
           </dl>
