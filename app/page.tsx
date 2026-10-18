@@ -1,36 +1,5 @@
-'use client'
+import { redirect } from 'next/navigation'
 
-import { useState } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
-import { ClinicShell } from '@/components/clinic/ClinicShell'
-import { clinicNavigation } from '@/src/config/navigation'
-import { patientRows } from '@/src/lib/presentation/patient-rows'
-import { StatCard } from '@/components/clinic/stat-card'
-import {
-  AlertTriangle, Check, ClipboardCheck, ListFilter,
-  MoreHorizontal, PawPrint, WalletCards,
-  } from 'lucide-react'
-
-const patients = patientRows
-
-function PatientQueue() { const [filter, setFilter] = useState('All'); return <section className="panel queue-panel"><header className="panel-header"><h2>Patient Queue</h2><div className="tabs">{['All', 'In Surgery', 'Recovery'].map(item => <button key={item} className={filter === item ? 'selected' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div></header><div className="table-head"><span>PATIENT</span><span>STATUS</span><span>TIME</span><span>VET</span><span>ACTION</span></div><div className="patient-rows">{patients.slice(0, 3).map(patient => <div className="patient-row" key={patient.name}><div className="patient-cell"><img src={patient.image} alt={`${patient.name}, ${patient.meta}`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><div><strong>{patient.name}</strong><span>{patient.meta}</span></div></div><span className={`status-pill ${patient.statusType}`}>{patient.statusType === 'checked' && <Check size={12} />}{patient.status}</span><strong className="appt-time">{patient.time}</strong><div className="vet"><span className="vet-avatar">{patient.vet === 'Dr. Sarah' ? 'S' : 'J'}</span><span>{patient.vet}</span></div><button className="icon-button" aria-label={`More actions for ${patient.name}`}><MoreHorizontal size={19} /></button></div>)}</div><button className="schedule-link">View Full Schedule</button></section> }
-function Messages() { return <section className="panel messages-panel"><header className="panel-header"><h2>Recent Messages</h2><ListFilter size={23} className="muted-icon" /></header><div className="messages-list">{[['EW', 'Emily Watson', 'Is it okay to give Cooper his medication?', '2 MINS AGO', 'online'], ['DC', 'David Chen', 'Luna seems much more active today.', '1 HOUR AGO', 'away'], ['MR', 'Mark Richards', "I'd like to reschedule Oliver's checkup.", '4 HOURS AGO', '']].map(([initials, name, copy, time, status]) => <div className="message" key={name}><div className={`message-avatar ${initials === 'EW' ? 'dark' : ''}`}>{initials}</div><div className="message-copy"><strong>{name}</strong><span>{copy}</span><small><i className={status}></i>{time}</small></div></div>)}</div><button className="communication-button">View Communication Hub</button></section> }
-function ClinicActivity() { return <section className="panel chart-panel"><h2>Clinic Activity</h2><div className="bars">{[35, 55, 92, 42, 70, 25, 99].map((height, index) => <div key={index} className={`bar-wrap ${index === 2 ? 'highlight' : ''}`}><div className="bar" style={{ height: `${height}%` }} /></div>)}</div><div className="days">{['MON','TUE','WED','THU','FRI','SAT','SUN'].map(day => <span key={day}>{day}</span>)}</div></section> }
-function Demographics() { return <section className="panel demographics"><h2>Patient Demographics</h2>{[['Canine','64%','blue'],['Feline','28%','purple'],['Other','8%','orange']].map(([label, value, color]) => <div className="demo-row" key={label}><div><span>{label}</span><b>{value}</b></div><div className="progress"><i className={color} style={{ width: value }} /></div></div>)}</section> }
-function InventoryAlerts() { return <section className="panel inventory"><h2><AlertTriangle size={21} /> Inventory Alerts</h2><div className="stock-row"><div><strong>Rabies Vaccines</strong><span className="danger">Low Stock: 12 units</span></div><button>Reorder</button></div><div className="stock-row"><div><strong>Surgical Gauze</strong><span className="warning">Restock Soon: 45 units</span></div><button>Reorder</button></div></section> }
-function Dashboard() { return <div className="content"><div className="stats-grid"><StatCard icon={ClipboardCheck} label="TODAY'S APPOINTMENTS" value="24" change="+12%" tone="blue" /><StatCard icon={PawPrint} label="ACTIVE PATIENTS" value="1,284" change="+4%" tone="purple" /><StatCard icon={WalletCards} label="REVENUE (TODAY)" value="$4,850" change="0%" tone="orange" /><StatCard icon={AlertTriangle} label="URGENT CASES" value="3" change="High" tone="red" /></div><div className="dashboard-grid"><div className="left-column"><PatientQueue /><div className="lower-grid"><ClinicActivity /><Demographics /></div></div><div className="right-column"><Messages /><InventoryAlerts /><section className="schedule-card"><h2>Your Schedule</h2><div><strong>Main Surgery</strong><span>1:00 PM - 3:30 PM</span></div><div><strong>Staff Meeting</strong><span>4:00 PM - 5:00 PM</span></div></section></div></div></div> }
-
-
-
-export default function Page() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const active = clinicNavigation.find((item) => item.href === pathname)?.label ?? 'Dashboard'
-  const renderView = () => {
-    if (active === 'Patients' || active === 'Appointments' || active === 'Messages' || active === 'Inventory' || active === 'Reports' || active === 'Settings') return null
-    return ({ Dashboard: <Dashboard /> }[active] || <Dashboard />)
-  }
-  const navigate = (item: (typeof clinicNavigation)[number]) => router.push(item.href)
-
-  return <ClinicShell active={active} onNavigate={navigate}>{renderView()}</ClinicShell>
+export default function HomePage() {
+  redirect('/dashboard')
 }
