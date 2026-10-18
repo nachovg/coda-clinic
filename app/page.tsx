@@ -3,38 +3,15 @@
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { ClinicShell } from '@/components/clinic/ClinicShell'
-import { codaMockData } from '@/src/lib/mock-data'
 import { clinicNavigation } from '@/src/config/navigation'
+import { patientRows } from '@/src/lib/presentation/patient-rows'
 import {
   AlertTriangle, CalendarDays, Check, ClipboardCheck, ChevronDown, ListFilter,
   MoreHorizontal, Package, PawPrint, Plus, Search, Stethoscope, Users, WalletCards,
   Clock3, CheckCircle2,
 } from 'lucide-react'
 
-const ownerById = new Map(codaMockData.owners.map((owner) => [owner.id, owner]))
-const vetById = new Map(codaMockData.users.map((user) => [user.id, user]))
-const appointmentByPatientId = new Map(codaMockData.appointments.map((appointment) => [appointment.patientId, appointment]))
-
-const patients = codaMockData.patients.map((patient) => {
-  const appointment = appointmentByPatientId.get(patient.id)
-  const owner = ownerById.get(patient.ownerId)
-  const vet = appointment ? vetById.get(appointment.veterinarianId) : undefined
-  const status = appointment?.status ?? 'SCHEDULED'
-  return {
-    id: patient.id,
-    name: patient.name,
-    breed: patient.breed,
-    meta: `${patient.breed} • ${patient.ageYears}y`,
-    owner: owner?.displayName ?? 'Clinic patient',
-    lastVisit: patient.lastVisit,
-    residence: patient.residence,
-    status,
-    statusType: status === 'IN_PROGRESS' ? 'progress' : status === 'CHECKED_IN' ? 'checked' : 'scheduled',
-    time: appointment ? `${appointment.startTime} ${appointment.startTime < '12:00' ? 'AM' : 'PM'}` : '—',
-    vet: vet?.displayName ?? 'Unassigned',
-    image: patient.avatar,
-  }
-})
+const patients = patientRows
 
 function StatCard({ icon: Icon, label, value, change, tone }: { icon: typeof CalendarDays; label: string; value: string; change: string; tone: string }) { return <section className="stat-card"><div className={`stat-icon ${tone}`}><Icon size={25} /></div><span className={`stat-change ${tone}`}>{change}</span><div className="stat-label">{label}</div><strong className="stat-value">{value}</strong></section> }
 function PatientQueue() { const [filter, setFilter] = useState('All'); return <section className="panel queue-panel"><header className="panel-header"><h2>Patient Queue</h2><div className="tabs">{['All', 'In Surgery', 'Recovery'].map(item => <button key={item} className={filter === item ? 'selected' : ''} onClick={() => setFilter(item)}>{item}</button>)}</div></header><div className="table-head"><span>PATIENT</span><span>STATUS</span><span>TIME</span><span>VET</span><span>ACTION</span></div><div className="patient-rows">{patients.slice(0, 3).map(patient => <div className="patient-row" key={patient.name}><div className="patient-cell"><img src={patient.image} alt={`${patient.name}, ${patient.meta}`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><div><strong>{patient.name}</strong><span>{patient.meta}</span></div></div><span className={`status-pill ${patient.statusType}`}>{patient.statusType === 'checked' && <Check size={12} />}{patient.status}</span><strong className="appt-time">{patient.time}</strong><div className="vet"><span className="vet-avatar">{patient.vet === 'Dr. Sarah' ? 'S' : 'J'}</span><span>{patient.vet}</span></div><button className="icon-button" aria-label={`More actions for ${patient.name}`}><MoreHorizontal size={19} /></button></div>)}</div><button className="schedule-link">View Full Schedule</button></section> }
@@ -43,7 +20,6 @@ function ClinicActivity() { return <section className="panel chart-panel"><h2>Cl
 function Demographics() { return <section className="panel demographics"><h2>Patient Demographics</h2>{[['Canine','64%','blue'],['Feline','28%','purple'],['Other','8%','orange']].map(([label, value, color]) => <div className="demo-row" key={label}><div><span>{label}</span><b>{value}</b></div><div className="progress"><i className={color} style={{ width: value }} /></div></div>)}</section> }
 function InventoryAlerts() { return <section className="panel inventory"><h2><AlertTriangle size={21} /> Inventory Alerts</h2><div className="stock-row"><div><strong>Rabies Vaccines</strong><span className="danger">Low Stock: 12 units</span></div><button>Reorder</button></div><div className="stock-row"><div><strong>Surgical Gauze</strong><span className="warning">Restock Soon: 45 units</span></div><button>Reorder</button></div></section> }
 function Dashboard() { return <div className="content"><div className="stats-grid"><StatCard icon={ClipboardCheck} label="TODAY'S APPOINTMENTS" value="24" change="+12%" tone="blue" /><StatCard icon={PawPrint} label="ACTIVE PATIENTS" value="1,284" change="+4%" tone="purple" /><StatCard icon={WalletCards} label="REVENUE (TODAY)" value="$4,850" change="0%" tone="orange" /><StatCard icon={AlertTriangle} label="URGENT CASES" value="3" change="High" tone="red" /></div><div className="dashboard-grid"><div className="left-column"><PatientQueue /><div className="lower-grid"><ClinicActivity /><Demographics /></div></div><div className="right-column"><Messages /><InventoryAlerts /><section className="schedule-card"><h2>Your Schedule</h2><div><strong>Main Surgery</strong><span>1:00 PM - 3:30 PM</span></div><div><strong>Staff Meeting</strong><span>4:00 PM - 5:00 PM</span></div></section></div></div></div> }
-function AppointmentsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Appointments</h1><p>Coordinate today&apos;s visits, procedures, and recovery schedules.</p></div><button className="new-appointment"><Plus size={18} /> New Appointment</button></div><div className="appointment-toolbar"><button className="date-button"><CalendarDays size={18} /> Wednesday, November 22, 2023 <ChevronDown size={16} /></button><div className="tabs"><button className="selected">All appointments</button><button>In surgery</button><button>Recovery</button></div></div><section className="appointment-list">{patients.map((patient, index) => <div className="appointment-card" key={patient.name}><div className="appointment-time"><strong>{patient.time}</strong><span>{index === 0 ? '30 min' : '45 min'}</span></div><div className="appointment-pet"><img src={patient.image} alt={`${patient.name} pet`} onError={(event) => { event.currentTarget.src = '/placeholder-user.jpg' }} /><div><strong>{patient.name}</strong><span>{patient.meta}</span></div></div><div><span className="eyebrow">REASON FOR VISIT</span><strong>{index === 0 ? 'Annual wellness exam' : index === 1 ? 'Vaccination follow-up' : 'Routine checkup'}</strong></div><div><span className="eyebrow">VETERINARIAN</span><strong>{patient.vet}</strong></div><span className={`status-pill ${patient.statusType}`}>{patient.status}</span><button className="icon-button"><MoreHorizontal size={20} /></button></div>)}</section></div> }
 function MessagesView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Messages</h1><p>Keep pet owners informed and connected with the clinic.</p></div><button className="new-appointment"><Plus size={18} /> New Message</button></div><div className="messages-layout"><section className="panel conversation-list"><div className="conversation-search"><Search size={18} /><input placeholder="Search conversations" /></div>{['Emily Watson','David Chen','Mark Richards','Eleanor Vance'].map((name, index) => <button className={`conversation ${index === 0 ? 'selected' : ''}`} key={name}><div className="message-avatar">{name.split(' ').map(n => n[0]).join('')}</div><div><strong>{name}</strong><span>{index === 0 ? 'Is it okay to give Cooper his medication?' : 'Thanks for the update from today.'}</span></div><small>{index + 2}m</small></button>)}</section><section className="panel thread"><header><div className="message-avatar">EW</div><div><strong>Emily Watson</strong><span>Online now</span></div></header><div className="thread-body"><div className="bubble received">Hi! Cooper is doing well after his visit. Is it okay to give him his medication with dinner?</div><div className="bubble sent">Yes, that is perfectly fine. Please keep an eye on his appetite this evening.</div></div><div className="composer"><input placeholder="Write a message..." /><button aria-label="Send message"><Plus size={18} /></button></div></section></div></div> }
 function InventoryView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Inventory</h1><p>Track medications, supplies, and clinic reorder levels.</p></div><button className="new-appointment"><Plus size={18} /> Add Inventory Item</button></div><div className="inventory-stats"><StatCard icon={Package} label="TOTAL ITEMS" value="248" change="+8%" tone="blue" /><StatCard icon={AlertTriangle} label="LOW STOCK" value="12" change="Action" tone="red" /><StatCard icon={CheckCircle2} label="WELL STOCKED" value="236" change="96%" tone="purple" /></div><section className="inventory-table"><div className="directory-head"><span>ITEM</span><span>CATEGORY</span><span>ON HAND</span><span>REORDER LEVEL</span><span>STATUS</span><span>ACTION</span></div>{[['Rabies Vaccines','Vaccines','12 units','25 units','Low stock','danger'],['Surgical Gauze','Surgical supplies','45 units','30 units','Restock soon','warning'],['Heartworm Preventative','Medication','86 units','20 units','In stock','success'],['Dental Scaling Kits','Equipment','18 units','10 units','In stock','success']].map(([item, category, onHand, reorder, status, tone]) => <div className="directory-row inventory-row" key={item}><strong>{item}</strong><span>{category}</span><span>{onHand}</span><span>{reorder}</span><b className={tone}>{status}</b><button className="reorder-button">{tone === 'success' ? 'View' : 'Reorder'}</button></div>)}</section></div> }
 function SettingsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Profile Settings</h1><p>Manage your CODA clinic profile and professional details.</p></div><button className="new-appointment"><Check size={18} /> Save Changes</button></div><section className="settings-card"><h2><Users size={21} /> Personal Information</h2><div className="settings-grid"><label>FIRST NAME<input defaultValue="Julian" /></label><label>LAST NAME<input defaultValue="Miller" /></label><label>PROFESSIONAL EMAIL<input defaultValue="j.miller@coda.health" /></label><label>PHONE NUMBER<input defaultValue="+1 (555) 014-2840" /></label></div></section><section className="settings-card"><h2><Stethoscope size={21} /> Clinic Details</h2><div className="settings-grid"><label className="full">CLINIC NAME<input defaultValue="CODA North Clinic" /></label><label className="full">CLINIC ADDRESS<textarea defaultValue="450 Medical Plaza Dr.\nNew York, NY 10001" /></label></div></section></div> }
@@ -54,8 +30,8 @@ export default function Page() {
   const pathname = usePathname()
   const active = clinicNavigation.find((item) => item.href === pathname)?.label ?? 'Dashboard'
   const renderView = () => {
-    if (active === 'Patients') return null
-    return ({ Dashboard: <Dashboard />, Appointments: <AppointmentsView />, Messages: <MessagesView />, Inventory: <InventoryView />, Reports: <ReportsView />, Settings: <SettingsView /> }[active] || <Dashboard />)
+    if (active === 'Patients' || active === 'Appointments') return null
+    return ({ Dashboard: <Dashboard />, Messages: <MessagesView />, Inventory: <InventoryView />, Reports: <ReportsView />, Settings: <SettingsView /> }[active] || <Dashboard />)
   }
   const navigate = (item: (typeof clinicNavigation)[number]) => router.push(item.href)
 
