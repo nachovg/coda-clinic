@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { CalendarDays, ChevronDown, MoreHorizontal, Plus, X } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
-import { getAppointments } from '@/src/lib/repositories/appointments.repository'
+import { getAppointments, updateAppointmentStatus } from '@/src/lib/repositories/appointments.repository'
 import { getPatients } from '@/src/lib/repositories/patients.repository'
 import type { Appointment, Patient } from '@/src/types/domain'
 
@@ -32,8 +32,8 @@ function getStatusLabel(status: Appointment['status']): string {
   return status.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 }
 
-function getStatusClass(status: Appointment['status']): 'progress' | 'checked' | 'scheduled' {
-  if (status === 'IN_PROGRESS') return 'progress'
+function getStatusClass(status: Appointment['status']): 'appointment-in-progress' | 'checked' | 'scheduled' {
+  if (status === 'IN_PROGRESS') return 'appointment-in-progress'
   if (status === 'CHECKED_IN' || status === 'COMPLETED') return 'checked'
   return 'scheduled'
 }
@@ -49,6 +49,8 @@ export default function AppointmentsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
+  const [updatingAppointmentId, setUpdatingAppointmentId] = useState<string | null>(null)
+  const [statusUpdateError, setStatusUpdateError] = useState<string | null>(null)
   const dateInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -82,6 +84,21 @@ export default function AppointmentsPage() {
     if (!dateInput) return
     if (typeof dateInput.showPicker === 'function') dateInput.showPicker()
     else dateInput.click()
+  }
+
+  const handleStatusChange = async (appointmentId: string, status: Appointment['status']) => {
+    setUpdatingAppointmentId(appointmentId)
+    setStatusUpdateError(null)
+    try {
+      const updatedAppointment = await updateAppointmentStatus(appointmentId, status)
+      setAppointments((current) => current.map((appointment) => (
+        appointment.id === appointmentId ? updatedAppointment : appointment
+      )))
+    } catch {
+      setStatusUpdateError(`Could not update the status for appointment ${appointmentId}.`)
+    } finally {
+      setUpdatingAppointmentId(null)
+    }
   }
 
   return (
@@ -122,6 +139,7 @@ export default function AppointmentsPage() {
       </div>
 
       <section className="appointment-list" aria-label="Appointments">
+        {statusUpdateError && <div className="p-4 text-rose-300" role="alert">{statusUpdateError}</div>}
         {isLoading ? (
           <div className="p-6 text-slate-400" role="status">Loading appointments...</div>
         ) : loadError ? (
@@ -160,7 +178,22 @@ export default function AppointmentsPage() {
                 <span className="eyebrow">VETERINARIAN</span>
                 <strong>{veterinarian?.displayName ?? 'Veterinarian unavailable'}</strong>
               </div>
-              <span className={`status-pill ${getStatusClass(appointment.status)}`}>{getStatusLabel(appointment.status)}</span>
+              <select
+                className={`status-pill ${getStatusClass(appointment.status)}`}
+                style={appointment.status === 'IN_PROGRESS' ? { color: '#ffad00', borderColor: '#7c5712', backgroundColor: '#3b2e13' } : undefined}
+                aria-label={`Update status for appointment ${appointment.id}`}
+                value={appointment.status}
+                disabled={updatingAppointmentId === appointment.id}
+                onChange={(event) => { void handleStatusChange(appointment.id, event.target.value as Appointment['status']) }}
+              >
+                <option value="SCHEDULED">Scheduled</option>
+                <option value="CHECKED_IN">Checked In</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="READY_FOR_DISCHARGE">Ready For Discharge</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="NO_SHOW">No Show</option>
+              </select>
               <button className="icon-button" aria-label={`More actions for appointment ${appointment.id}`}><MoreHorizontal size={20} /></button>
             </div>
           )

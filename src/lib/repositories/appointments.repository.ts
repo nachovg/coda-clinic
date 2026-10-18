@@ -2,6 +2,7 @@ import { codaMockData } from "@/src/lib/mock-data";
 import type { Appointment, AppointmentStatus } from "@/src/types/domain";
 
 const createdAppointmentsStorageKey = "coda.createdAppointments";
+const updatedAppointmentsStorageKey = "coda.updatedAppointments";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -61,10 +62,35 @@ function getCreatedAppointments(): Appointment[] {
   }
 }
 
+function getUpdatedAppointmentStatuses(): Map<string, AppointmentStatus> {
+  if (typeof window === "undefined") return new Map();
+
+  try {
+    const storedUpdates: unknown = JSON.parse(window.localStorage.getItem(updatedAppointmentsStorageKey) ?? "[]");
+    if (!Array.isArray(storedUpdates)) return new Map();
+
+    return new Map(storedUpdates.flatMap((value): [string, AppointmentStatus][] => {
+      if (!isRecord(value) || typeof value.id !== "string" || !value.id.trim() || !isAppointmentStatus(value.status)) {
+        return [];
+      }
+      return [[value.id, value.status]];
+    }));
+  } catch {
+    return new Map();
+  }
+}
+
 function getAllAppointments(): Appointment[] {
   const originalIds = new Set(codaMockData.appointments.map((appointment) => appointment.id));
   const createdAppointments = getCreatedAppointments().filter((appointment) => !originalIds.has(appointment.id));
-  return [...codaMockData.appointments, ...createdAppointments];
+  const updatedStatuses = getUpdatedAppointmentStatuses();
+  return [
+    ...codaMockData.appointments.map((appointment) => ({
+      ...appointment,
+      status: updatedStatuses.get(appointment.id) ?? appointment.status,
+    })),
+    ...createdAppointments,
+  ];
 }
 
 export async function getAppointments(): Promise<Appointment[]> {
@@ -94,4 +120,40 @@ export async function createAppointment(appointment: Appointment): Promise<Appoi
   ];
   window.localStorage.setItem(createdAppointmentsStorageKey, JSON.stringify(updatedAppointments));
   return appointment;
+}
+
+export async function updateAppointmentStatus(
+  appointmentId: string,
+  status: AppointmentStatus,
+): Promise<Appointment> {
+  if (typeof window === "undefined") {
+    throw new Error("Appointment storage is only available in the browser.");
+  }
+  if (!isAppointmentStatus(status)) {
+    throw new Error("Invalid appointment status.");
+  }
+
+  const createdAppointments = getCreatedAppointments();
+  const createdAppointment = createdAppointments.find((appointment) => appointment.id === appointmentId);
+  if (createdAppointment) {
+    const updatedAppointment = { ...createdAppointment, status };
+    window.localStorage.setItem(
+      createdAppointmentsStorageKey,
+      JSON.stringify(createdAppointments.map((appointment) => appointment.id === appointmentId ? updatedAppointment : appointment)),
+    );
+    return updatedAppointment;
+  }
+
+  const originalAppointment = codaMockData.appointments.find((appointment) => appointment.id === appointmentId);
+  if (!originalAppointment) {
+    throw new Error("Appointment could not be found.");
+  }
+
+  const updates = getUpdatedAppointmentStatuses();
+  updates.set(appointmentId, status);
+  window.localStorage.setItem(
+    updatedAppointmentsStorageKey,
+    JSON.stringify([...updates].map(([id, updatedStatus]) => ({ id, status: updatedStatus }))),
+  );
+  return { ...originalAppointment, status };
 }
