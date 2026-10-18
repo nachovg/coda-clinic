@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { CalendarDays, ChevronDown, MoreHorizontal, Plus } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
 import { getAppointments } from '@/src/lib/repositories/appointments.repository'
@@ -78,7 +79,7 @@ export default function AppointmentsPage() {
           <h1>Appointments</h1>
           <p>Coordinate today&apos;s visits, procedures, and recovery schedules.</p>
         </div>
-        <button className="new-appointment"><Plus size={18} /> New Appointment</button>
+        <Link href="/appointments/new" className="new-appointment text-inherit no-underline"><Plus size={18} /> New Appointment</Link>
       </div>
 
       <div className="appointment-toolbar">
