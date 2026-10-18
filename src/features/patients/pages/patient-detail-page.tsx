@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarDays, HeartPulse, MapPin, PawPrint, UserRound } from 'lucide-react'
+import { ArrowLeft, CalendarDays, HeartPulse, MapPin, PawPrint, Pencil, UserRound } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
 import { getPatientById } from '@/src/lib/repositories/patients.repository'
 import type { MedicalRecord, Patient } from '@/src/types/domain'
@@ -114,9 +114,14 @@ export default function PatientDetailPage({ patientId }: { patientId: string }) 
             <p className="capitalize">{patient.species} · {patient.breed}</p>
           </div>
         </div>
-        <Link href="/patients" className="date-button text-inherit no-underline">
-          <ArrowLeft size={18} /> Back to Patients
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href={`/patients/${patient.id}/edit`} className="new-appointment text-inherit no-underline">
+            <Pencil size={18} /> Edit Patient
+          </Link>
+          <Link href="/patients" className="date-button text-inherit no-underline">
+            <ArrowLeft size={18} /> Back to Patients
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">

@@ -2,6 +2,7 @@ import { codaMockData } from "@/src/lib/mock-data";
 import type { Patient, Species, Sex, PatientStatus, Vaccination } from "@/src/types/domain";
 
 const createdPatientsStorageKey = "coda.createdPatients";
+const updatedPatientsStorageKey = "coda.updatedPatients";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -67,8 +68,29 @@ function getCreatedPatients(): Patient[] {
   }
 }
 
+function getUpdatedPatients(): Map<string, Patient> {
+  if (typeof window === "undefined") return new Map();
+
+  try {
+    const storedUpdates: unknown = JSON.parse(window.localStorage.getItem(updatedPatientsStorageKey) ?? "{}");
+    if (!isRecord(storedUpdates)) return new Map();
+
+    const validUpdates = new Map<string, Patient>();
+    for (const [patientId, patient] of Object.entries(storedUpdates)) {
+      if (isPatient(patient) && patient.id === patientId) validUpdates.set(patientId, patient);
+    }
+    return validUpdates;
+  } catch {
+    return new Map();
+  }
+}
+
 function getAllPatients(): Patient[] {
-  return [...codaMockData.patients, ...getCreatedPatients()];
+  const updates = getUpdatedPatients();
+  const originalIds = new Set(codaMockData.patients.map((patient) => patient.id));
+  const originalPatients = codaMockData.patients.map((patient) => updates.get(patient.id) ?? patient);
+  const createdPatients = getCreatedPatients().filter((patient) => !originalIds.has(patient.id));
+  return [...originalPatients, ...createdPatients];
 }
 
 export async function getPatients(): Promise<Patient[]> {
@@ -98,5 +120,26 @@ export async function createPatient(patient: Patient): Promise<Patient> {
   const createdPatients = getCreatedPatients();
   const updatedPatients = [...createdPatients.filter((existing) => existing.id !== patient.id), patient];
   window.localStorage.setItem(createdPatientsStorageKey, JSON.stringify(updatedPatients));
+  return patient;
+}
+
+export async function updatePatient(patient: Patient): Promise<Patient> {
+  if (typeof window === "undefined") {
+    throw new Error("Patient storage is only available in the browser.");
+  }
+
+  if (codaMockData.patients.some((original) => original.id === patient.id)) {
+    const updates = getUpdatedPatients();
+    updates.set(patient.id, patient);
+    window.localStorage.setItem(updatedPatientsStorageKey, JSON.stringify(Object.fromEntries(updates)));
+    return patient;
+  }
+
+  const createdPatients = getCreatedPatients();
+  const existingIndex = createdPatients.findIndex((created) => created.id === patient.id);
+  if (existingIndex === -1) throw new Error("Patient not found.");
+
+  const updatedCreatedPatients = createdPatients.map((created) => created.id === patient.id ? patient : created);
+  window.localStorage.setItem(createdPatientsStorageKey, JSON.stringify(updatedCreatedPatients));
   return patient;
 }
