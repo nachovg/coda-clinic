@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { CalendarDays, ChevronDown, MoreHorizontal, Plus, X } from 'lucide-react'
+import { CalendarDays, ChevronDown, Pencil, Plus, X } from 'lucide-react'
 import { codaMockData } from '@/src/lib/mock-data'
 import { getAppointments, updateAppointmentStatus } from '@/src/lib/repositories/appointments.repository'
 import { getPatients } from '@/src/lib/repositories/patients.repository'
@@ -194,7 +194,7 @@ export default function AppointmentsPage() {
                 <option value="CANCELLED">Cancelled</option>
                 <option value="NO_SHOW">No Show</option>
               </select>
-              <button className="icon-button" aria-label={`More actions for appointment ${appointment.id}`}><MoreHorizontal size={20} /></button>
+              <Link href={`/appointments/${encodeURIComponent(appointment.id)}/edit`} className="icon-button" aria-label={`Edit appointment ${appointment.id}`}><Pencil size={18} /></Link>
             </div>
           )
         })}

@@ -62,18 +62,24 @@ function getCreatedAppointments(): Appointment[] {
   }
 }
 
-function getUpdatedAppointmentStatuses(): Map<string, AppointmentStatus> {
+function getUpdatedAppointments(): Map<string, Partial<Appointment>> {
   if (typeof window === "undefined") return new Map();
 
   try {
     const storedUpdates: unknown = JSON.parse(window.localStorage.getItem(updatedAppointmentsStorageKey) ?? "[]");
     if (!Array.isArray(storedUpdates)) return new Map();
 
-    return new Map(storedUpdates.flatMap((value): [string, AppointmentStatus][] => {
-      if (!isRecord(value) || typeof value.id !== "string" || !value.id.trim() || !isAppointmentStatus(value.status)) {
+    return new Map(storedUpdates.flatMap((value): [string, Partial<Appointment>][] => {
+      if (!isRecord(value) || typeof value.id !== "string" || !value.id.trim()) {
         return [];
       }
-      return [[value.id, value.status]];
+      if (isAppointment(value)) {
+        return [[value.id, value]];
+      }
+      if (isAppointmentStatus(value.status)) {
+        return [[value.id, { status: value.status }]];
+      }
+      return [];
     }));
   } catch {
     return new Map();
@@ -83,11 +89,11 @@ function getUpdatedAppointmentStatuses(): Map<string, AppointmentStatus> {
 function getAllAppointments(): Appointment[] {
   const originalIds = new Set(codaMockData.appointments.map((appointment) => appointment.id));
   const createdAppointments = getCreatedAppointments().filter((appointment) => !originalIds.has(appointment.id));
-  const updatedStatuses = getUpdatedAppointmentStatuses();
+  const updates = getUpdatedAppointments();
   return [
     ...codaMockData.appointments.map((appointment) => ({
       ...appointment,
-      status: updatedStatuses.get(appointment.id) ?? appointment.status,
+      ...updates.get(appointment.id),
     })),
     ...createdAppointments,
   ];
@@ -103,6 +109,10 @@ export async function getAppointmentsByDate(date: string): Promise<Appointment[]
 
 export async function getAppointmentsByPatient(patientId: string): Promise<Appointment[]> {
   return (await getAppointments()).filter((appointment) => appointment.patientId === patientId);
+}
+
+export async function getAppointmentById(appointmentId: string): Promise<Appointment | undefined> {
+  return (await getAppointments()).find((appointment) => appointment.id === appointmentId);
 }
 
 export async function createAppointment(appointment: Appointment): Promise<Appointment> {
@@ -149,11 +159,61 @@ export async function updateAppointmentStatus(
     throw new Error("Appointment could not be found.");
   }
 
-  const updates = getUpdatedAppointmentStatuses();
-  updates.set(appointmentId, status);
+  const updates = getUpdatedAppointments();
+  const updatedAppointment = { ...originalAppointment, ...updates.get(appointmentId), status };
+  updates.set(appointmentId, updatedAppointment);
   window.localStorage.setItem(
     updatedAppointmentsStorageKey,
-    JSON.stringify([...updates].map(([id, updatedStatus]) => ({ id, status: updatedStatus }))),
+    JSON.stringify([...updates].map(([id, appointment]) => ({ ...appointment, id }))),
   );
-  return { ...originalAppointment, status };
+  return updatedAppointment;
+}
+
+export type AppointmentEditableFields = Pick<Appointment,
+  | "patientId"
+  | "ownerId"
+  | "veterinarianId"
+  | "date"
+  | "startTime"
+  | "endTime"
+  | "durationMinutes"
+  | "reason"
+  | "service"
+  | "room"
+  | "notes"
+>;
+
+export async function updateAppointment(
+  appointmentId: string,
+  changes: AppointmentEditableFields,
+): Promise<Appointment> {
+  if (typeof window === "undefined") {
+    throw new Error("Appointment storage is only available in the browser.");
+  }
+
+  const currentAppointment = (await getAppointments()).find((appointment) => appointment.id === appointmentId);
+  if (!currentAppointment) throw new Error("Appointment could not be found.");
+
+  const updatedAppointment: Appointment = { ...currentAppointment, ...changes, id: appointmentId };
+  const createdAppointments = getCreatedAppointments();
+  const createdIndex = createdAppointments.findIndex((appointment) => appointment.id === appointmentId);
+  if (createdIndex !== -1) {
+    window.localStorage.setItem(
+      createdAppointmentsStorageKey,
+      JSON.stringify(createdAppointments.map((appointment) => appointment.id === appointmentId ? updatedAppointment : appointment)),
+    );
+    return updatedAppointment;
+  }
+
+  if (!codaMockData.appointments.some((appointment) => appointment.id === appointmentId)) {
+    throw new Error("Appointment could not be found.");
+  }
+
+  const updates = getUpdatedAppointments();
+  updates.set(appointmentId, updatedAppointment);
+  window.localStorage.setItem(
+    updatedAppointmentsStorageKey,
+    JSON.stringify([...updates].map(([id, appointment]) => ({ ...appointment, id }))),
+  );
+  return updatedAppointment;
 }
