@@ -8,7 +8,7 @@ import { patientRows } from '@/src/lib/presentation/patient-rows'
 import { StatCard } from '@/components/clinic/stat-card'
 import {
   AlertTriangle, Check, ClipboardCheck, ListFilter,
-  MoreHorizontal, PawPrint, Stethoscope, Users, WalletCards,
+  MoreHorizontal, PawPrint, WalletCards,
   } from 'lucide-react'
 
 const patients = patientRows
@@ -19,7 +19,7 @@ function ClinicActivity() { return <section className="panel chart-panel"><h2>Cl
 function Demographics() { return <section className="panel demographics"><h2>Patient Demographics</h2>{[['Canine','64%','blue'],['Feline','28%','purple'],['Other','8%','orange']].map(([label, value, color]) => <div className="demo-row" key={label}><div><span>{label}</span><b>{value}</b></div><div className="progress"><i className={color} style={{ width: value }} /></div></div>)}</section> }
 function InventoryAlerts() { return <section className="panel inventory"><h2><AlertTriangle size={21} /> Inventory Alerts</h2><div className="stock-row"><div><strong>Rabies Vaccines</strong><span className="danger">Low Stock: 12 units</span></div><button>Reorder</button></div><div className="stock-row"><div><strong>Surgical Gauze</strong><span className="warning">Restock Soon: 45 units</span></div><button>Reorder</button></div></section> }
 function Dashboard() { return <div className="content"><div className="stats-grid"><StatCard icon={ClipboardCheck} label="TODAY'S APPOINTMENTS" value="24" change="+12%" tone="blue" /><StatCard icon={PawPrint} label="ACTIVE PATIENTS" value="1,284" change="+4%" tone="purple" /><StatCard icon={WalletCards} label="REVENUE (TODAY)" value="$4,850" change="0%" tone="orange" /><StatCard icon={AlertTriangle} label="URGENT CASES" value="3" change="High" tone="red" /></div><div className="dashboard-grid"><div className="left-column"><PatientQueue /><div className="lower-grid"><ClinicActivity /><Demographics /></div></div><div className="right-column"><Messages /><InventoryAlerts /><section className="schedule-card"><h2>Your Schedule</h2><div><strong>Main Surgery</strong><span>1:00 PM - 3:30 PM</span></div><div><strong>Staff Meeting</strong><span>4:00 PM - 5:00 PM</span></div></section></div></div></div> }
-function SettingsView() { return <div className="content inner-page"><div className="page-heading"><div><h1>Profile Settings</h1><p>Manage your CODA clinic profile and professional details.</p></div><button className="new-appointment"><Check size={18} /> Save Changes</button></div><section className="settings-card"><h2><Users size={21} /> Personal Information</h2><div className="settings-grid"><label>FIRST NAME<input defaultValue="Julian" /></label><label>LAST NAME<input defaultValue="Miller" /></label><label>PROFESSIONAL EMAIL<input defaultValue="j.miller@coda.health" /></label><label>PHONE NUMBER<input defaultValue="+1 (555) 014-2840" /></label></div></section><section className="settings-card"><h2><Stethoscope size={21} /> Clinic Details</h2><div className="settings-grid"><label className="full">CLINIC NAME<input defaultValue="CODA North Clinic" /></label><label className="full">CLINIC ADDRESS<textarea defaultValue="450 Medical Plaza Dr.\nNew York, NY 10001" /></label></div></section></div> }
+
 
 
 export default function Page() {
@@ -27,8 +27,8 @@ export default function Page() {
   const pathname = usePathname()
   const active = clinicNavigation.find((item) => item.href === pathname)?.label ?? 'Dashboard'
   const renderView = () => {
-    if (active === 'Patients' || active === 'Appointments' || active === 'Messages' || active === 'Inventory' || active === 'Reports') return null
-    return ({ Dashboard: <Dashboard />, Settings: <SettingsView /> }[active] || <Dashboard />)
+    if (active === 'Patients' || active === 'Appointments' || active === 'Messages' || active === 'Inventory' || active === 'Reports' || active === 'Settings') return null
+    return ({ Dashboard: <Dashboard /> }[active] || <Dashboard />)
   }
   const navigate = (item: (typeof clinicNavigation)[number]) => router.push(item.href)
 

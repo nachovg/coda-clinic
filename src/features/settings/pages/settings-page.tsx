@@ -1,0 +1,5 @@
+'use client'
+
+import { Check, Stethoscope, Users } from 'lucide-react'
+
+export default function SettingsPage() { return <div className="content inner-page"><div className="page-heading"><div><h1>Profile Settings</h1><p>Manage your CODA clinic profile and professional details.</p></div><button className="new-appointment"><Check size={18} /> Save Changes</button></div><section className="settings-card"><h2><Users size={21} /> Personal Information</h2><div className="settings-grid"><label>FIRST NAME<input defaultValue="Julian" /></label><label>LAST NAME<input defaultValue="Miller" /></label><label>PROFESSIONAL EMAIL<input defaultValue="j.miller@coda.health" /></label><label>PHONE NUMBER<input defaultValue="+1 (555) 014-2840" /></label></div></section><section className="settings-card"><h2><Stethoscope size={21} /> Clinic Details</h2><div className="settings-grid"><label className="full">CLINIC NAME<input defaultValue="CODA North Clinic" /></label><label className="full">CLINIC ADDRESS<textarea defaultValue="450 Medical Plaza Dr.\nNew York, NY 10001" /></label></div></section></div> }
