@@ -212,6 +212,23 @@ export interface InventoryItem {
   supplier: string;
   unitCost: number;
   expirationDate: string | null;
+  /** Missing on the original JSON rows; those rows are treated as active. */
+  isActive?: boolean;
+}
+
+export type InventoryMovementType = "IN" | "OUT";
+
+export interface InventoryMovement {
+  id: string;
+  itemId: string;
+  productName: string;
+  unit: string;
+  type: InventoryMovementType;
+  quantity: number;
+  previousStock: number;
+  resultingStock: number;
+  reason: string;
+  createdAt: string;
 }
 
 export interface DashboardMetrics {
